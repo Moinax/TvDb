@@ -2,9 +2,6 @@
 
 namespace PhpTvDb\TvDb;
 
-use PhpTvDb\TvDb\Tvdb;
-use PhpTvDb\TvDb\Episode;
-
 /**
  * Base class for interacting with TV shows
  *
@@ -135,7 +132,7 @@ class Show extends Tvdb
      * @param SimpleXMLObject $config A simplexmlobject created from thetvdb.com's xml data for the tv show
      * @return void
      **/
-    function __construct($config)
+    public function __construct($config)
     {
 
         $this->id = (string)$config->id;
@@ -144,8 +141,8 @@ class Show extends Tvdb
         $this->firstAired = strtotime((string)$config->FirstAired);
         $this->network = (string)$config->Network;
         $this->runtime = (string)$config->Runtime;
-        $this->genres = $this->removeEmptyIndexes(explode('|', (string)$config->Genre));
-        $this->actors = $this->removeEmptyIndexes(explode('|', (string)$config->Actors));
+        $this->genres = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Genre));
+        $this->actors = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Actors));
         $this->overview = (string)$config->Overview;
         $this->dayOfWeek = (string)$config->Airs_DayOfWeek;
         $this->airTime = (string)$config->Airs_Time;
@@ -153,31 +150,4 @@ class Show extends Tvdb
         $this->imdbId = (string)$config->IMDB_ID;
         $this->zap2ItId = (string)$config->zap2it_id;
     }
-
-
-    /**
-     * Get a specific episode by season and episode number
-     *
-     * @var int $season required the season number
-     * @var int $episode required the episode number
-     * @return TV_Episode
-     **/
-    public function getEpisode($season, $episode)
-    {
-        $params = array('action' => 'get_episode',
-                        'season' => (int)$season,
-                        'episode' => (int)$episode,
-                        'show_id' => $this->id);
-
-        $data = self::request($params);
-
-        if ($data) {
-            $xml = simplexml_load_string($data);
-            return new Episode($xml->Episode);
-        } else {
-            return false;
-        }
-    }
 }
-
-?>

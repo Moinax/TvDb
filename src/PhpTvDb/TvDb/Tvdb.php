@@ -3,13 +3,6 @@
 namespace PhpTvDb\TvDb;
 
 /**
- * Constants defined here outside of class because class constants can't be
- * the result of any operation (concatenation)
- */
-define('PHPTVDB_URL', 'http://thetvdb.com/');
-define('PHPTVDB_API_URL', PHPTVDB_URL . 'api/');
-
-/**
  * Base TVDB library class, provides universal functions and variables
  *
  * @package PhpTvDb
@@ -24,23 +17,86 @@ class Tvdb
      *
      * @var string
      */
-
-    const baseUrl = PHPTVDB_URL;
-
-    /**
-     * Base url for api requests
-     */
-
-    const apiUrl = PHPTVDB_API_URL;
+    protected $baseUrl;
 
     /**
      * API key for thetvdb.com
      *
      * @var string
      */
+    protected $apiKey;
 
-    const apiKey = PHPTVDB_API_KEY;
+    public function __construct($baseUrl, $apiKey)
+    {
+        $this->baseUrl = $baseUrl;
+        $this->apiKey = $apiKey;
+    }
 
+    /**
+     * Searches for tv shows based on show name
+     *
+     * @var string $showName the show name to search for
+     * @access public
+     * @return array An array of TV_Show objects matching the show name
+     **/
+    public function search($showName)
+    {
+        $params = array('action' => 'search_tv_shows', 'show_name' => $showName);
+        $data = $this->request($params);
+
+        if ($data) {
+            $xml = simplexml_load_string($data);
+            $shows = array();
+            foreach ($xml->Series as $show) {
+                $shows[] = $this->getShow($show->seriesid);
+            }
+
+            return $shows;
+        }
+    }
+
+    /**
+     * Find a tv show by the id from thetvdb.com
+     *
+     * @return TV_Show|false A TV_Show object or false if not found
+     **/
+    public function getShow($showId)
+    {
+        $params = array('action' => 'show_by_id', 'id' => $showId);
+        $data = $this->request($params);
+
+        if ($data) {
+            $xml = simplexml_load_string($data);
+            $show = new Show($xml->Series);
+            return $show;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get a specific episode by season and episode number
+     *
+     * @var int $season required the season number
+     * @var int $episode required the episode number
+     * @return TV_Episode
+     **/
+    public function getEpisode($season, $episode)
+    {
+        $params = array('action' => 'get_episode',
+                        'season' => (int)$season,
+                        'episode' => (int)$episode,
+                        'show_id' => $this->id);
+
+        $data = $this->request($params);
+
+        if ($data) {
+            $xml = simplexml_load_string($data);
+            return new Episode($xml->Episode);
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Fetches data via curl and returns result
@@ -49,7 +105,7 @@ class Tvdb
      * @param $url string The url to fetch data from
      * @return string The data
      **/
-    protected static function fetchData($url)
+    protected function fetchData($url)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -77,16 +133,16 @@ class Tvdb
      * @param $params An array containing parameters for the request to thetvdb.com
      * @return string The data from thetvdb.com
      **/
-    protected static function request($params)
+    protected function request($params)
     {
 
         switch ($params['action']) {
 
             case 'show_by_id':
                 $id = $params['id'];
-                $url = self::baseUrl . 'data/series/' . $id . '/';
+                $url = $this->baseUrl . 'data/series/' . $id . '/';
 
-                $data = self::fetchData($url);
+                $data = $this->fetchData($url);
                 return $data;
                 break;
 
@@ -94,17 +150,17 @@ class Tvdb
                 $season = $params['season'];
                 $episode = $params['episode'];
                 $showId = $params['show_id'];
-                $url = self::apiUrl . self::apiKey . '/series/' . $showId . '/default/' . $season . '/' . $episode;
+                $url = $this->baseUrl . 'api/' . $this->apiKey . '/series/' . $showId . '/default/' . $season . '/' . $episode;
 
-                $data = self::fetchData($url);
+                $data = $this->fetchData($url);
                 return $data;
                 break;
 
             case 'search_tv_shows':
                 $showName = urlencode($params['show_name']);
-                $url = self::apiUrl . "/GetSeries.php?seriesname=$showName";
+                $url = $this->baseUrl . "api/GetSeries.php?seriesname=$showName";
 
-                $data = self::fetchData($url);
+                $data = $this->fetchData($url);
                 return $data;
                 break;
 
@@ -121,7 +177,7 @@ class Tvdb
      * @param array $array The array to remove empty indexes from
      * @return array An array with all empty indexes removed
      **/
-    public function removeEmptyIndexes($array)
+    public static function removeEmptyIndexes($array)
     {
 
         $length = count($array);
@@ -136,5 +192,3 @@ class Tvdb
         return $array;
     }
 }
-
-?>
