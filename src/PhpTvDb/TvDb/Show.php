@@ -6,7 +6,6 @@ namespace PhpTvDb\TvDb;
  * Base class for interacting with TV shows
  *
  * @package PhpTvDb
- * @author Ryan Doherty <ryan@ryandoherty.com>
  * @author Jérôme Poskin <moinax@gmail.com>
  */
 class Show extends Tvdb

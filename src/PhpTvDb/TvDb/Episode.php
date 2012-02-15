@@ -6,7 +6,6 @@ namespace PhpTvDb\TvDb;
  * TV_Episode class. Class for single tv episode for a TV show.
  *
  * @package PhpTvDb
- * @author Ryan Doherty <ryan@ryandoherty.com>
  * @author Jérôme Poskin <moinax@gmail.com>
  **/
 class Episode
