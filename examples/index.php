@@ -6,7 +6,7 @@ include __DIR__.'../src/TvDb/Episode.php';
 
 use TvDb\Client;
 
-$tvdb = new Client(PHPTVDB_URL, PHPTVDB_API_KEY);
+$tvdb = new Client(TVDB_URL, TVDB_API_KEY);
 
 $mirrors = $tvdb->getMirrors();
 $languages = $tvdb->getLanguages();

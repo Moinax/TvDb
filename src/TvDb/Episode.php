@@ -3,9 +3,9 @@
 namespace TvDb;
 
 /**
- * TV_Episode class. Class for single tv episode for a TV show.
+ * Episode class. Class for single tv episode for a TV show.
  *
- * @package PhpTvDb
+ * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  **/
 class Episode

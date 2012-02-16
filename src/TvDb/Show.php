@@ -5,10 +5,10 @@ namespace TvDb;
 /**
  * Base class for interacting with TV shows
  *
- * @package PhpTvDb
+ * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  */
-class Show extends Tvdb
+class Show
 {
 
     /**

@@ -5,7 +5,7 @@ namespace TvDb;
 /**
  * Base TVDB library class, provides universal functions and variables
  *
- * @package PhpTvDb
+ * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  **/
 class Client

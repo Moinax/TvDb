@@ -3,5 +3,5 @@
  * Constants defined here outside of class because class constants can't be
  * the result of any operation (concatenation)
  */
-define('PHPTVDB_URL', 'http://thetvdb.com');
-define('PHPTVDB_API_KEY', '');
+define('TVDB_URL', 'http://thetvdb.com');
+define('TVDB_API_KEY', '');
