@@ -1,5 +1,5 @@
-PhpTvDb
-=======
+TvDb
+====
 
 Based on the well known php library phptvdb (available on http://code.google.com/p/phptvdb/), this version
 will try offer more features from the tvdb api (available on http://www.thetvdb.com/wiki/index.php/Programmers_API)

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTvDb\TvDb;
+namespace TvDb;
 
 /**
  * Base class for interacting with TV shows

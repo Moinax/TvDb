@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTvDb\TvDb;
+namespace TvDb;
 
 /**
  * TV_Episode class. Class for single tv episode for a TV show.

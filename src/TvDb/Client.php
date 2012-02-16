@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpTvDb\TvDb;
+namespace TvDb;
 
 /**
  * Base TVDB library class, provides universal functions and variables
@@ -8,7 +8,7 @@ namespace PhpTvDb\TvDb;
  * @package PhpTvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  **/
-class Tvdb
+class Client
 {
 
     /**
