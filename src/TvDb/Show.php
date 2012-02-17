@@ -140,8 +140,8 @@ class Show
         $this->firstAired = strtotime((string)$config->FirstAired);
         $this->network = (string)$config->Network;
         $this->runtime = (string)$config->Runtime;
-        $this->genres = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Genre));
-        $this->actors = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Actors));
+        $this->genres = Client::removeEmptyIndexes(explode('|', (string)$config->Genre));
+        $this->actors = Client::removeEmptyIndexes(explode('|', (string)$config->Actors));
         $this->overview = (string)$config->Overview;
         $this->dayOfWeek = (string)$config->Airs_DayOfWeek;
         $this->airTime = (string)$config->Airs_Time;

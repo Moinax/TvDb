@@ -105,10 +105,10 @@ class Episode
         $this->number = (string)$config->EpisodeNumber;
         $this->episode = (string)$config->EpisodeNumber;
         $this->firstAired = strtotime((string)$config->FirstAired);
-        $this->guestStars = Tvdb::removeEmptyIndexes(explode('|', (string)$config->GuestStars));
+        $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$config->GuestStars));
         $this->guestStars = array_map('trim', $this->guestStars);
-        $this->directors = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Director));
-        $this->writers = Tvdb::removeEmptyIndexes(explode('|', (string)$config->Writer));
+        $this->directors = Client::removeEmptyIndexes(explode('|', (string)$config->Director));
+        $this->writers = Client::removeEmptyIndexes(explode('|', (string)$config->Writer));
         $this->overview = (string)$config->Overview;
         $this->imdbId = (string)$config->IMDB_ID;
         $this->name = (string)$config->EpisodeName;
