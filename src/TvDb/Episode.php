@@ -3,7 +3,7 @@
 namespace TvDb;
 
 /**
- * Episode class. Class for single tv episode for a TV show.
+ * Episode class. Class for single tv episode for a TV serie.
  *
  * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
@@ -12,107 +12,114 @@ class Episode
 {
 
     /**
-     * The tvdb.com episode id
-     *
-     * @access public
-     * @var integer
+     * @var int
      */
-    public $id;
+    public $id = 0;
 
     /**
-     * The season number
-     *
-     * @access public
-     * @var integer|string
+     * @var int
      */
-    public $season;
+    public $number = 0;
 
     /**
-     * The episode number for the season
-     *
-     * @access public
-     * @var integer|string
+     * @var int
      */
-    public $number;
+    public $season = 0;
 
     /**
-     * The episode name
-     *
-     * @access public
+     * @var array
+     */
+    public $directors = array();
+
+    /**
+     * @var array
+     */
+    public $guestStars = array();
+
+    /**
+     * @var array
+     */
+    public $writers = array();
+
+    /**
      * @var string
      */
-    public $name;
+    public $name = '';
 
     /**
-     * First air date of the episode measured in number of seconds from the epoch
-     *
-     * @access public
-     * @var int
+     * @var \DateTime
      */
     public $firstAired;
 
     /**
-     * Array of guest star names (strings)
-     *
-     * @access public
-     * @var array
-     */
-    public $guestStars;
-
-    /**
-     * Array of director names (strings)
-     *
-     * @access public
-     * @var array
-     */
-    public $directors;
-
-    /**
-     * Array of writers names (strings)
-     *
-     * @access public
-     * @var array
-     */
-    public $writers;
-
-    /**
-     * Overview of the episode
-     *
-     * @access public
      * @var string
      */
-    public $overview;
+    public $imdbId = '';
 
     /**
-     * IMDB id (http://imdb.com/title/$imdbId)
-     *
-     * @access public
      * @var string
      */
-    public $imdbId;
+    public $language = Client::DEFAULT_LANGUAGE;
+
+    /**
+     * @var string
+     */
+    public $overview = '';
+
+    /**
+     * @var string
+     */
+    public $rating = '';
+
+    /**
+     * @var int
+     */
+    public $ratingCount = 0;
+
+    /**
+     * @var DateTime
+     */
+    public $lastUpdated;
+
+    /**
+     * @var int
+     */
+    public $seasonId = 0;
+
+    /**
+     * @var int
+     */
+    public $serieId = 0;
+
+    /**
+     * @var string
+     */
+    public $thumbnail = '';
 
     /**
      * Constructor
      *
      * @access public
      * @return void
-     * @param simplexmlobject $config simplexmlobject created from thetvdb.com's xml data for the tv episode
+     * @param simplexmlobject $data simplexmlobject created from thetvdb.com's xml data for the tv episode
      **/
-    public function __construct($config)
+    public function __construct($data)
     {
-        $this->id = (string)$config->id;
-        $this->season = (string)$config->SeasonNumber;
-        $this->number = (string)$config->EpisodeNumber;
-        $this->episode = (string)$config->EpisodeNumber;
-        $this->firstAired = strtotime((string)$config->FirstAired);
-        $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$config->GuestStars));
-        $this->guestStars = array_map('trim', $this->guestStars);
-        $this->directors = Client::removeEmptyIndexes(explode('|', (string)$config->Director));
-        $this->writers = Client::removeEmptyIndexes(explode('|', (string)$config->Writer));
-        $this->overview = (string)$config->Overview;
-        $this->imdbId = (string)$config->IMDB_ID;
-        $this->name = (string)$config->EpisodeName;
+        $this->id = (int)$data->id;
+        $this->number = (int)$data->Combined_episodenumber;
+        $this->season = (int)$data->Combined_season;
+        $this->directors = Client::removeEmptyIndexes(explode('|', (string)$data->Director));
+        $this->name = (string)$data->EpisodeName;
+        $this->firstAired = new \DateTime((string)$data->FirstAired);
+        $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$data->GuestStars));
+        $this->imdbId = (string)$data->IMDB_ID;
+        $this->language = (string)$data->Language;
+        $this->overview = (string)$data->Overview;
+        $this->rating = (string)$data->Rating;
+        $this->ratingCount = (int)$data->RatingCount;
+        $this->writers = Client::removeEmptyIndexes(explode('|', (string)$data->Writer));
+        $this->thumbnail = (string)$data->filename;
+        $this->seasonId = (int)$data->seasonid;
+        $this->serieId = (int)$data->seriesid;
     }
 }
-
-?>

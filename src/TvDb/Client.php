@@ -10,20 +10,45 @@ namespace TvDb;
  **/
 class Client
 {
+    const POST = 'post';
+    const GET = 'get';
+
+    const MIRROR_TYPE_XML = 1;
+    const MIRROR_TYPE_BANNER = 2;
+    const MIRROR_TYPE_ZIP = 4;
+
+    const DEFAULT_LANGUAGE = 'en';
+
+    const FORMAT_XML = 'xml';
+    const FORMAT_ZIP = 'zip';
 
     /**
      * Base url for TheTVDB
      *
      * @var string
      */
-    protected $baseUrl;
+    protected $baseUrl = '';
 
     /**
      * API key for thetvdb.com
      *
      * @var string
      */
-    protected $apiKey;
+    protected $apiKey = '';
+
+    /**
+     * Array of available mirrors
+     *
+     * @var array
+     */
+    protected $mirrors = array();
+
+    /**
+     * Array of available languages
+     *
+     * @var array
+     */
+    protected $languages = array();
 
     /**
      * @param string $baseUrl Domain name of the api without trailing slash
@@ -36,55 +61,108 @@ class Client
     }
 
     /**
-     * Get a list of mirrors available to fetch the data from the api
-     * @return SimpleXMLElement
-     */
-    public function getMirrors()
-    {
-        $url = $this->baseUrl . '/api/' . $this->apiKey . '/mirrors.xml';
-        return $this->fetchData($url);
-    }
-
-    /**
-     * Get a list of languages available for the content of the api
-     * @return SimpleXMLElement
-     */
-    public function getLanguages()
-    {
-        $url = $this->baseUrl . '/api/' . $this->apiKey . '/languages.xml';
-        return $this->fetchData($url);
-    }
-
-    /**
-     * Searches for tv serie based on show name
+     * Get a language information
      *
-     * @var string $serieName the show name to search for
-     * @return SimpleXMLElement
-     **/
-    public function search($serieName)
+     * @param string $abbreviation
+     * @return array
+     * @throws \Exception
+     */
+    public function getLanguage($abbreviation)
     {
-        $url = $this->baseUrl . '/api/GetSeries.php?seriesname='. urlencode($serieName);
+        if (empty($this->languages)) {
+            $this->getLanguages();
+        }
+        if (!isset($this->languages[$abbreviation])) {
+            throw new \Exception('This language is not available');
+        }
 
-        return $this->fetchData($url);
+        return $this->languages[$abbreviation];
     }
 
     /**
-     * Find a tv show by the id from thetvdb.com
+     * Get the server time for further updates
      *
-     * @return Show|false A TV_Show object or false if not found
-     **/
-    public function getSerie($serieId)
+     * @return string
+     */
+    public function getServerTime()
     {
-        $url = $this->baseUrl . '/data/series/' . $serieId . '/';
-        $data = $this->fetchData($url);
-
-        return new Show($data->Series);
+        return (string)$this->fetchXml('Updates.php?type=none')->Time;
     }
 
-    public function getEpisodes($serieId, $language = 'en', $format = 'xml')
+    /**
+     * Searches for tv serie based on series name
+     *
+     * @var string $seriesName the show name to search for
+     * @return array
+     **/
+    public function getSeries($seriesName)
     {
-        $url = $this->baseUrl . '/api/' . $this->apiKey . '/series/' . $serieId . '/all/' . $language . '.' . $format;
-        return $this->fetchData($url);
+        $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName));
+        $series = array();
+        foreach ($data->Series as $serie) {
+            $series[] = new Serie($serie);
+        }
+        return $series;
+    }
+
+    /**
+     * Find a tv serie by the id from thetvdb.com
+     *
+     * @var int $serieId
+     * @var string $language
+     *
+     * @return Show|false A serie object or false if not found
+     **/
+    public function getSerie($serieId, $language = self::DEFAULT_LANGUAGE)
+    {
+        $data = $this->fetchXml('series/' . $serieId . '/' . $language . '.xml');
+
+        return new FullSerie($data->Series);
+    }
+
+    /**
+     * Find all banners related to a serie
+     *
+     * @param int $serieId
+     * @return string
+     */
+    public function getBanners($serieId)
+    {
+        $data = $this->fetchXml('series/' . $serieId . '/banners.xml');
+        $banners = array();
+        foreach ($data->Banner as $banner) {
+            $banners[] = new Banner($banner);
+        }
+
+        return $banners;
+    }
+
+    /**
+     * Get all episodes for a serie
+     *
+     * @param int $serieId
+     * @param string $language
+     * @param string $format
+     * @return array
+     * @throws \ErrorException
+     */
+    public function getSerieEpisodes($serieId, $language = self::DEFAULT_LANGUAGE, $format = self::FORMAT_XML)
+    {
+        switch ($format) {
+            case self::FORMAT_XML:
+                $data = $this->fetchXml('series/' . $serieId . '/all/' . $language . '.' . $format);
+                break;
+            case self::FORMAT_ZIP:
+            default:
+                throw new \ErrorException('Unsupported format');
+                break;
+        }
+        $serie = new FullSerie($data->Series);
+        $episodes = array();
+        foreach ($data->Episode as $episode) {
+            $episodes[] = new Episode($episode);
+        }
+        return array('serie' => $serie, 'episodes' => $episodes);
     }
 
     /**
@@ -93,29 +171,92 @@ class Client
      * @var int $serieId required the id of the serie
      * @var int $season required the season number
      * @var int $episode required the episode number
-     * @return TV_Episode
+     * @return Episode
      **/
     public function getEpisode($serieId, $season, $episode)
     {
-        $url = $this->baseUrl . 'api/' . $this->apiKey . '/series/' . $serieId . '/default/' . $season . '/' . $episode;
-
-        $data = $this->fetchData($url);
+        $data = $this->fetchXml('series/' . $serieId . '/default/' . $season . '/' . $episode);
 
         return new Episode($data->Episode);
     }
 
     /**
+     * Get a specific episode by his id
+     *
+     * @var int $episodeId required the id of the episode
+     * @var string $language
+     * @return Episode
+     **/
+    public function getEpisodeById($episodeId, $language = self::DEFAULT_LANGUAGE)
+    {
+        $data = $this->fetchXml('episodes/' . $episodeId . '/' . $language);
+
+        return new Episode($data->Episode);
+    }
+
+    /**
+     * Get updates list based on previous time you got data
+     *
+     * @param int $previousTime
+     * @return string
+     */
+    public function getUpdates($previousTime)
+    {
+        $data = $this->fetchXml('Updates.php?type=all&time=' . $previousTime);
+
+        $series = array();
+        foreach($data->Series as $episodeId) {
+            $series[] = (int)$episodeId;
+        }
+        $episodes = array();
+        foreach($data->Episode as $episodeId) {
+            $episodes[] = (int)$episodeId;
+        }
+
+        return array('series' => $series, 'episodes' => $episodes);
+    }
+
+
+    /**
      * Fetches data via curl and returns result
      *
      * @access protected
-     * @param $url string The url to fetch data from
-     * @return SimpleXMLElement The data
+     * @param string $function The function used to fetch data in xml
+     * @return string The data
      **/
-    protected function fetchData($url)
+    protected function fetchXml($function, $params = array(), $method = self::GET)
+    {
+        if (strpos($function, '.php') > 0) { // no need of api key for php calls
+            $url = $this->getMirror(self::MIRROR_TYPE_XML) . '/api/' . $function;
+        } else {
+            $url = $this->getMirror(self::MIRROR_TYPE_XML) . '/api/' . $this->apiKey . '/' . $function;
+        }
+
+        $data = $this->fetch($url, $params, $method);
+
+        $simpleXml = $this->getXml($data);
+
+        return $simpleXml;
+    }
+
+    /**
+     * Fetch data with curl
+     *
+     * @param string $url
+     * @param array $params
+     * @param string $method
+     * @return bool|string
+     */
+    protected function fetch($url, array $params = array(), $method = self::GET)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        if ($method == self::POST) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        }
 
         $response = curl_exec($ch);
 
@@ -128,7 +269,94 @@ class Client
             return false;
         }
 
-        return simplexml_load_string($data);
+        return $data;
+
+    }
+
+    /**
+     * Convert xml string to SimpleXMLElement
+     *
+     * @param string $data
+     * @return \SimpleXMLElement
+     * @throws \ErrorException|\Exception
+     */
+    protected function getXml($data)
+    {
+        if (extension_loaded('libxml')) {
+            libxml_use_internal_errors(true);
+        }
+
+        $simpleXml = simplexml_load_string($data);
+        if (!$simpleXml) {
+            if (extension_loaded('libxml')) {
+                $errors = libxml_get_errors();
+                var_dump($errors);
+                die;
+                throw new \ErrorException(implode("\n", $errors));
+            } else {
+                throw new \Exception('Xml file cound not be loaded');
+            }
+        }
+
+        return $simpleXml;
+    }
+
+    /**
+     * Get a list of mirrors available to fetchXml the data from the api
+     * @return void
+     */
+    protected function getMirrors()
+    {
+        $data = $this->fetch($this->baseUrl . '/api/' . $this->apiKey . '/mirrors.xml');
+        $mirrors = $this->getXml($data);
+
+        foreach ($mirrors->Mirror as $mirror) {
+            $typeMask = (int)$mirror->typemask;
+            $mirrorPath = (string)$mirror->mirrorpath;
+
+            if ($typeMask & self::MIRROR_TYPE_XML) {
+                $this->mirrors[self::MIRROR_TYPE_XML][] = $mirrorPath;
+            }
+            if ($typeMask & self::MIRROR_TYPE_BANNER) {
+                $this->mirrors[self::MIRROR_TYPE_BANNER][] = $mirrorPath;
+            }
+            if ($typeMask & self::MIRROR_TYPE_ZIP) {
+                $this->mirrors[self::MIRROR_TYPE_ZIP][] = $mirrorPath;
+            }
+        }
+    }
+
+    /**
+     * Get a random mirror from the list of available mirrors
+     *
+     * @param int $typeMask
+     * @return string
+     * @access protected
+     */
+    protected function getMirror($typeMask = self::MIRROR_TYPE_XML)
+    {
+        if (empty($this->mirrors)) {
+            $this->getMirrors();
+        }
+        return $this->mirrors[$typeMask][array_rand($this->mirrors[$typeMask], 1)];
+
+    }
+
+    /**
+     * Get a list of languages available for the content of the api
+     * @return SimpleXMLElement
+     */
+    protected function getLanguages()
+    {
+        $languages = $this->fetchXml('languages.xml');
+
+        foreach ($languages->Language as $language) {
+            $this->languages[(string)$language->abbreviation] = array(
+                'name' => (string)$language->name,
+                'abbreviation' => (string)$language->abbreviation,
+                'id' => (int)$language->id,
+            );
+        }
     }
 
     /**
