@@ -333,7 +333,7 @@ class Client
      * @return string
      * @access protected
      */
-    protected function getMirror($typeMask = self::MIRROR_TYPE_XML)
+    public function getMirror($typeMask = self::MIRROR_TYPE_XML)
     {
         if (empty($this->mirrors)) {
             $this->getMirrors();
