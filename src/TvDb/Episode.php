@@ -117,6 +117,7 @@ class Episode
         $this->overview = (string)$data->Overview;
         $this->rating = (string)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
+        $this->lastUpdated = \DateTime::createFromFormat('U', (int)$data->lastupdated);
         $this->writers = Client::removeEmptyIndexes(explode('|', (string)$data->Writer));
         $this->thumbnail = (string)$data->filename;
         $this->seasonId = (int)$data->seasonid;

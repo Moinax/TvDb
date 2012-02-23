@@ -117,7 +117,7 @@ class Client
     {
         $data = $this->fetchXml('series/' . $serieId . '/' . $language . '.xml');
 
-        return new FullSerie($data->Series);
+        return new Serie($data->Series);
     }
 
     /**
@@ -157,7 +157,7 @@ class Client
                 throw new \ErrorException('Unsupported format');
                 break;
         }
-        $serie = new FullSerie($data->Series);
+        $serie = new Serie($data->Series);
         $episodes = array();
         foreach ($data->Episode as $episode) {
             $episodes[] = new Episode($episode);
@@ -290,8 +290,6 @@ class Client
         if (!$simpleXml) {
             if (extension_loaded('libxml')) {
                 $errors = libxml_get_errors();
-                var_dump($errors);
-                die;
                 throw new \ErrorException(implode("\n", $errors));
             } else {
                 throw new \Exception('Xml file cound not be loaded');
