@@ -22,6 +22,10 @@ class Client
     const FORMAT_XML = 'xml';
     const FORMAT_ZIP = 'zip';
 
+    const UPDATE_TYPE_ALL = 'all';
+    const UPDATE_TYPE_SERIES = 'series';
+    const UPDATE_TYPE_EPISODES = 'episodes';
+
     /**
      * Base url for TheTVDB
      *
@@ -198,22 +202,36 @@ class Client
      * Get updates list based on previous time you got data
      *
      * @param int $previousTime
-     * @return string
+     * @param string $type
+     * @return array
      */
-    public function getUpdates($previousTime)
+    public function getUpdates($previousTime, $type = self::UPDATE_TYPE_ALL)
     {
-        $data = $this->fetchXml('Updates.php?type=all&time=' . $previousTime);
+        $data = $this->fetchXml('Updates.php?type=' . $type . '&time=' . $previousTime);
 
         $series = array();
-        foreach($data->Series as $episodeId) {
-            $series[] = (int)$episodeId;
+        if (in_array($type, array(self::UPDATE_TYPE_ALL, self::UPDATE_TYPE_SERIES))) {
+            foreach($data->Series as $serieId) {
+                $series[] = (int)$serieId;
+            }
         }
         $episodes = array();
-        foreach($data->Episode as $episodeId) {
-            $episodes[] = (int)$episodeId;
+        if (in_array($type, array(self::UPDATE_TYPE_ALL, self::UPDATE_TYPE_EPISODES))) {
+            foreach($data->Episode as $episodeId) {
+                $episodes[] = (int)$episodeId;
+            }
         }
-
-        return array('series' => $series, 'episodes' => $episodes);
+        switch ($type) {
+            case self::UPDATE_TYPE_ALL:
+                return array('series' => $series, 'episodes' => $episodes);
+                break;
+            case self::UPDATE_TYPE_SERIES:
+                return $series;
+                break;
+            case self::UPDATE_TYPE_EPISODES:
+                return $episodes;
+                break;
+        }
     }
 
 
