@@ -160,7 +160,7 @@ class Client
         $serie = new Serie($data->Series);
         $episodes = array();
         foreach ($data->Episode as $episode) {
-            $episodes[] = new Episode($episode);
+            $episodes[(int)$episode->id] = new Episode($episode);
         }
         return array('serie' => $serie, 'episodes' => $episodes);
     }
