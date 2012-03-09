@@ -288,7 +288,11 @@ class Client
         $simpleXml = simplexml_load_string($data);
         if (!$simpleXml) {
             if (extension_loaded('libxml')) {
-                $errors = libxml_get_errors();
+                $xmlErrors = libxml_get_errors();
+                $errors = array();
+                foreach ($xmlErrors as $error) {
+                    $errors[] = sprintf('Error in file %s on line %d with message : %s', $error->file, $error->line, $error->message);
+                }
                 throw new \ErrorException(implode("\n", $errors));
             } else {
                 throw new \Exception('Xml file cound not be loaded');
