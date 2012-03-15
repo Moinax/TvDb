@@ -293,10 +293,12 @@ class Client
                 foreach ($xmlErrors as $error) {
                     $errors[] = sprintf('Error in file %s on line %d with message : %s', $error->file, $error->line, $error->message);
                 }
-                throw new \ErrorException(implode("\n", $errors));
-            } else {
-                throw new \Exception('Xml file cound not be loaded');
+                if (count($errors) > 0) {
+
+                    throw new \ErrorException(implode("\n", $errors));
+                }
             }
+            throw new \Exception('Xml file cound not be loaded');
         }
 
         return $simpleXml;
