@@ -108,9 +108,9 @@ class Episode
         $this->id = (int)$data->id;
         $this->number = (int)$data->Combined_episodenumber;
         $this->season = (int)$data->Combined_season;
-        $this->directors = Client::removeEmptyIndexes(explode('|', (string)$data->Director));
+        $this->directors = (array)Client::removeEmptyIndexes(explode('|', (string)$data->Director));
         $this->name = (string)$data->EpisodeName;
-        $this->firstAired = new \DateTime((string)$data->FirstAired);
+        $this->firstAired = (string)$data->FirstAired !== '' ? new \DateTime((string)$data->FirstAired) : null;
         $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$data->GuestStars));
         $this->imdbId = (string)$data->IMDB_ID;
         $this->language = (string)$data->Language;
@@ -118,7 +118,7 @@ class Episode
         $this->rating = (string)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
         $this->lastUpdated = \DateTime::createFromFormat('U', (int)$data->lastupdated);
-        $this->writers = Client::removeEmptyIndexes(explode('|', (string)$data->Writer));
+        $this->writers = (array)Client::removeEmptyIndexes(explode('|', (string)$data->Writer));
         $this->thumbnail = (string)$data->filename;
         $this->seasonId = (int)$data->seasonid;
         $this->serieId = (int)$data->seriesid;
