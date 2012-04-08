@@ -95,9 +95,9 @@ class Client
      * @var string $seriesName the show name to search for
      * @return array
      **/
-    public function getSeries($seriesName)
+    public function getSeries($seriesName, $language = self::DEFAULT_LANGUAGE)
     {
-        $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName));
+        $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName) . '&language=' . $language);
         $series = array();
         foreach ($data->Series as $serie) {
             $series[] = new Serie($serie);
