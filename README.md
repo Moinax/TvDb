@@ -16,4 +16,6 @@ Examples:
 Use the index.php to test the Api
 Rename the settings.php.dist in settings.php if you wan to test and enter your own API key provided by http://thetvdb.com
 
-This version still needs some tests and is not ready for production
+Status:
+-------
+This version is quite stable and used in production on http://nextepisode.tv
