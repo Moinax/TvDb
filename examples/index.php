@@ -2,7 +2,6 @@
 include __DIR__ . '/settings.php';
 include __DIR__.'/../src/TvDb/Client.php';
 include __DIR__.'/../src/TvDb/Serie.php';
-include __DIR__.'/../src/TvDb/FullSerie.php';
 include __DIR__.'/../src/TvDb/Banner.php';
 include __DIR__.'/../src/TvDb/Episode.php';
 
