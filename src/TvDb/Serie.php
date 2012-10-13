@@ -134,7 +134,7 @@ class Serie
     public function __construct($data)
     {
         $this->id = (int)$data->id;
-        $this->language = (string)$data->language;
+        $this->language = (string)$data->Language;
         $this->name = (string)$data->SeriesName;
         $this->banner = (string)$data->banner;
         $this->overview = (string)$data->Overview;
