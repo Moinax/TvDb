@@ -2,6 +2,8 @@
 
 namespace TvDb;
 
+use TvDbException;
+
 /**
  * Base TVDB library class, provides universal functions and variables
  *
@@ -265,7 +267,7 @@ class Client
         curl_close($ch);
 
         if ($httpCode != 200) {
-            return false;
+            throw new CurlException(sprintf('Cannot fetch %s', $url), $httpCode);
         }
 
         return $data;
@@ -295,10 +297,10 @@ class Client
                 }
                 if (count($errors) > 0) {
 
-                    throw new \ErrorException(implode("\n", $errors));
+                    throw new XmlException(implode("\n", $errors));
                 }
             }
-            throw new \Exception('Xml file cound not be loaded');
+            throw new XmlException('Xml file cound not be loaded');
         }
 
         return $simpleXml;
