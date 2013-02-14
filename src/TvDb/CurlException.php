@@ -3,7 +3,7 @@
 namespace TvDb;
 
 
-class CurlException extends Exception
+class CurlException extends \Exception
 {
 
 }

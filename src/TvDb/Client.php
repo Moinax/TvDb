@@ -2,7 +2,7 @@
 
 namespace TvDb;
 
-use TvDbException;
+use TvDb\CurlException;
 
 /**
  * Base TVDB library class, provides universal functions and variables
@@ -173,11 +173,13 @@ class Client
      * @var int $serieId required the id of the serie
      * @var int $season required the season number
      * @var int $episode required the episode number
+     * @var string $language language abbreviation
+     *
      * @return Episode
      **/
-    public function getEpisode($serieId, $season, $episode)
+    public function getEpisode($serieId, $season, $episode, $language = self::DEFAULT_LANGUAGE)
     {
-        $data = $this->fetchXml('series/' . $serieId . '/default/' . $season . '/' . $episode . '.xml');
+        $data = $this->fetchXml('series/' . $serieId . '/default/' . $season . '/' . $episode . '/' . $language . '.xml');
 
         return new Episode($data->Episode);
     }
@@ -349,7 +351,7 @@ class Client
 
     /**
      * Get a list of languages available for the content of the api
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      */
     protected function getLanguages()
     {
