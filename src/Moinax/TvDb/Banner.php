@@ -1,6 +1,6 @@
 <?php
 
-namespace TvDb;
+namespace Moinax\TvDb;
 
 /**
  * Simple banner object
@@ -70,9 +70,9 @@ class Banner
      * Constructor
      *
      * @access public
-     * @param SimpleXMLObject $data A simplexmlobject created from thetvdb.com's xml data for the tv serie banner
-     * @return void
-     **/
+     * @param \SimpleXMLElement $data A simplexml element created from thetvdb.com's xml data for the tv serie banner
+     * @return \Moinax\TvDb\Banner
+     */
     public function __construct($data)
     {
         $this->id = (int)$data->id;

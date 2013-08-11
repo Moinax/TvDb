@@ -1,8 +1,8 @@
 <?php
 
-namespace TvDb;
+namespace Moinax\TvDb;
 
-use TvDb\CurlException;
+use Moinax\TvDb\CurlException;
 
 /**
  * Base TVDB library class, provides universal functions and variables
@@ -94,9 +94,11 @@ class Client
     /**
      * Searches for tv serie based on series name
      *
-     * @var string $seriesName the show name to search for
+     * @param string $seriesName
+     * @param string $language
+     * @internal param string $seriesName the show name to search for
      * @return array
-     **/
+     */
     public function getSeries($seriesName, $language = self::DEFAULT_LANGUAGE)
     {
         $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName) . '&language=' . $language);
@@ -113,7 +115,7 @@ class Client
      * @var int $serieId
      * @var string $language
      *
-     * @return Show|false A serie object or false if not found
+     * @return Serie A serie object or false if not found
      **/
     public function getSerie($serieId, $language = self::DEFAULT_LANGUAGE)
     {
@@ -225,8 +227,10 @@ class Client
      *
      * @access protected
      * @param string $function The function used to fetch data in xml
+     * @param array $params
+     * @param string $method
      * @return string The data
-     **/
+     */
     protected function fetchXml($function, $params = array(), $method = self::GET)
     {
         if (strpos($function, '.php') > 0) { // no need of api key for php calls
@@ -248,6 +252,7 @@ class Client
      * @param string $url
      * @param array $params
      * @param string $method
+     * @throws CurlException
      * @return bool|string
      */
     protected function fetch($url, array $params = array(), $method = self::GET)

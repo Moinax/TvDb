@@ -1,6 +1,6 @@
 <?php
 
-namespace TvDb;
+namespace Moinax\TvDb;
 
 /**
  * Episode class. Class for single tv episode for a TV serie.
@@ -77,7 +77,7 @@ class Episode
     public $ratingCount = 0;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     public $lastUpdated;
 
@@ -100,9 +100,9 @@ class Episode
      * Constructor
      *
      * @access public
-     * @return void
-     * @param simplexmlobject $data simplexmlobject created from thetvdb.com's xml data for the tv episode
-     **/
+     * @return \Moinax\TvDb\Episode
+     * @param \SimpleXMLElement $data simplexml element created from thetvdb.com's xml data for the tv episode
+     */
     public function __construct($data)
     {
         $this->id = (int)$data->id;

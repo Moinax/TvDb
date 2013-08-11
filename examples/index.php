@@ -1,12 +1,12 @@
 <?php
 include __DIR__ . '/settings.php';
-include __DIR__.'/../src/TvDb/CurlException.php';
-include __DIR__.'/../src/TvDb/Client.php';
-include __DIR__.'/../src/TvDb/Serie.php';
-include __DIR__.'/../src/TvDb/Banner.php';
-include __DIR__.'/../src/TvDb/Episode.php';
+include __DIR__ . '/../src/Moinax/TvDb/CurlException.php';
+include __DIR__ . '/../src/Moinax/TvDb/Client.php';
+include __DIR__ . '/../src/Moinax/TvDb/Serie.php';
+include __DIR__ . '/../src/Moinax/TvDb/Banner.php';
+include __DIR__ . '/../src/Moinax/TvDb/Episode.php';
 
-use TvDb\Client;
+use Moinax\TvDb\Client;
 
 $tvdb = new Client(TVDB_URL, TVDB_API_KEY);
 

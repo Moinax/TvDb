@@ -1,6 +1,6 @@
 <?php
 
-namespace TvDb;
+namespace Moinax\TvDb;
 
 /**
  * Serie object
@@ -36,7 +36,7 @@ class Serie
     public $overview;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     public $firstAired;
 
@@ -96,7 +96,7 @@ class Serie
     public $status = '';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     public $added;
 
@@ -111,7 +111,7 @@ class Serie
     public $fanArt = '';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     public $lastUpdated;
 
@@ -124,13 +124,14 @@ class Serie
      * @var string
      */
     public $zap2ItId = '';
+
     /**
      * Constructor
      *
      * @access public
-     * @param SimpleXMLObject $data A simplexmlobject created from thetvdb.com's xml data for the tv show
-     * @return void
-     **/
+     * @param \SimpleXMLElement $data A simplexml element created from thetvdb.com's xml data for the tv show
+     * @return \Moinax\TvDb\Serie
+     */
     public function __construct($data)
     {
         $this->id = (int)$data->id;
