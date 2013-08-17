@@ -106,16 +106,8 @@ class Episode
     public function __construct($data)
     {
         $this->id = (int)$data->id;
-        if (isset($data->Combined_episodenumber)) {
-            $this->number = (int)$data->Combined_episodenumber;
-        } else {
-            $this->number = (int)$data->EpisodeNumber;
-        }
-        if (isset($data->Combined_season)) {
-            $this->season = (int)$data->Combined_season;
-        } else {
-            $this->season = (int)$data->SeasonNumber;
-        }
+        $this->number = (int)$data->EpisodeNumber;
+        $this->season = (int)$data->SeasonNumber;
         $this->directors = (array)Client::removeEmptyIndexes(explode('|', (string)$data->Director));
         $this->name = (string)$data->EpisodeName;
         $this->firstAired = (string)$data->FirstAired !== '' ? new \DateTime((string)$data->FirstAired) : null;
