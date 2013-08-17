@@ -111,7 +111,7 @@ class Episode
         } else {
             $this->number = (int)$data->EpisodeNumber;
         }
-        if (isset($data->Comined_season)) {
+        if (isset($data->Combined_season)) {
             $this->season = (int)$data->Combined_season;
         } else {
             $this->season = (int)$data->SeasonNumber;
@@ -121,7 +121,7 @@ class Episode
         $this->firstAired = (string)$data->FirstAired !== '' ? new \DateTime((string)$data->FirstAired) : null;
         $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$data->GuestStars));
         $this->imdbId = (string)$data->IMDB_ID;
-        $this->language = (string)$data->Language;
+        $this->language = (string) property_exists('SimpleXMLElement', 'language') ? $data->language : $data->Language;
         $this->overview = (string)$data->Overview;
         $this->rating = (string)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
