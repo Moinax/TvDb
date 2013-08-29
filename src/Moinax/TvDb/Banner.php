@@ -65,6 +65,11 @@ class Banner
      * @var string
      */
     public $vignettePath = '';
+    
+    /**
+     * @var int
+     */
+    public $season;
 
     /**
      * Constructor
@@ -86,5 +91,6 @@ class Banner
         $this->seriesName = (string)$data->SeriesName;
         $this->thumbnailPath = (string)$data->ThumbnailPath;
         $this->vignettePath = (string)$data->VignettePath;
+        $this->season = (int)$data->Season;
     }
 }
