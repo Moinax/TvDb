@@ -142,6 +142,23 @@ class Client
     }
 
     /**
+     * Find all actors related to a serie
+     *
+     * @param int $serieId
+     * @return array
+     */
+    public function getActors($serieId)
+    {
+        $data = $this->fetchXml('series/'. $serieId . '/actors.xml');
+        $actors = array();
+        foreach ($data->Actor as $actor) {
+            $actors [] = new Actor($actor);
+        }
+
+        return $actors;
+    }
+
+    /**
      * Get all episodes for a serie
      *
      * @param int $serieId
