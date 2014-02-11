@@ -148,6 +148,7 @@ class Serie
         $this->genres = (array)Client::removeEmptyIndexes(explode('|', (string)$data->Genre));
         $this->network = (string)$data->Network;
         $this->rating = (string)$data->Rating;
+        $this->ratingCount = (string)$data->RatingCount;
         $this->runtime = (int)$data->Runtime;
         $this->status = (string)$data->Status;
         $this->added = new \DateTime((string)$data->added);
