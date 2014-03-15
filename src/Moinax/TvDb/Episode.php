@@ -113,7 +113,7 @@ class Episode
         $this->firstAired = (string)$data->FirstAired !== '' ? new \DateTime((string)$data->FirstAired) : null;
         $this->guestStars = Client::removeEmptyIndexes(explode('|', (string)$data->GuestStars));
         $this->imdbId = (string)$data->IMDB_ID;
-        $this->language = (string) property_exists('SimpleXMLElement', 'language') ? $data->language : $data->Language;
+        $this->language = (string) $data->Language;
         $this->overview = (string)$data->Overview;
         $this->rating = (string)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
