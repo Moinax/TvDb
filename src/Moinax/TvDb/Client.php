@@ -125,6 +125,24 @@ class Client
     }
 
     /**
+     * Find a tv serie by a remote id
+     *
+     * @param array $remoteId
+     * @param string $language
+     *
+     * @example <pre><code>$obj->getSerieByRemoteId(array('imdbid' => '<imdbid>'));</code></pre>
+     * @example <pre><code>$obj->getSerieByRemoteId(array('zap2it' => '<zap2it>'));</code></pre>
+     *
+     * @return Serie
+     */
+    public function getSerieByRemoteId(array $remoteId, $language = self::DEFAULT_LANGUAGE)
+    {
+        $data = $this->fetchXml('GetSeriesByRemoteID.php?' . http_build_query($remoteId) . '&language=' . $language);
+
+        return new Serie($data->Series);
+    }
+
+    /**
      * Find all banners related to a serie
      *
      * @param int $serieId
