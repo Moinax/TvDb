@@ -136,6 +136,9 @@ class Serie
     {
         $this->id = (int)$data->id;
         $this->language = (string)$data->Language;
+        if(isset($data->language)) {
+            $this->language = (string)$data->language;
+        }
         $this->name = (string)$data->SeriesName;
         $this->banner = (string)$data->banner;
         $this->overview = (string)$data->Overview;
