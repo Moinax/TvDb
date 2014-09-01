@@ -3,6 +3,8 @@
 namespace Moinax\TvDb;
 
 use Moinax\TvDb\CurlException;
+use Moinax\TvDb\Http\CurlClient;
+use Moinax\TvDb\Http\HttpClient;
 
 /**
  * Base TVDB library class, provides universal functions and variables
@@ -60,6 +62,13 @@ class Client
     protected $defaultLanguage = 'en';
 
     /**
+     * HttpClient used to query the API.
+     *
+     * @var HttpClient
+     */
+    protected $httpClient;
+
+    /**
      * @param string $baseUrl Domain name of the api without trailing slash
      * @param string $apiKey Api key provided by http://thetvdb.com
      */
@@ -67,6 +76,17 @@ class Client
     {
         $this->baseUrl = $baseUrl;
         $this->apiKey = $apiKey;
+        $this->httpClient = new CurlClient();
+    }
+
+    /**
+     * Set the HttpClient used to query the API.
+     *
+     * @param HttpClient $client
+     */
+    public function setHttpClient(HttpClient $client)
+    {
+        $this->httpClient = $client;
     }
 
     /**
@@ -302,7 +322,7 @@ class Client
             $url = $this->getMirror(self::MIRROR_TYPE_XML) . '/api/' . $this->apiKey . '/' . $function;
         }
 
-        $data = $this->fetch($url, $params, $method);
+        $data = $this->httpClient->fetch($url, $params, $method);
 
         $simpleXml = $this->getXml($data);
 
@@ -320,28 +340,7 @@ class Client
      */
     protected function fetch($url, array $params = array(), $method = self::GET)
     {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        if ($method == self::POST) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        }
-
-        $response = curl_exec($ch);
-
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $data = substr($response, $headerSize);
-        curl_close($ch);
-
-        if ($httpCode != 200) {
-            throw new CurlException(sprintf('Cannot fetch %s', $url), $httpCode);
-        }
-
-        return $data;
-
+        return $this->httpClient->fetch($url, $params, $method);
     }
 
     /**
@@ -382,7 +381,7 @@ class Client
      */
     protected function getMirrors()
     {
-        $data = $this->fetch($this->baseUrl . '/api/' . $this->apiKey . '/mirrors.xml');
+        $data = $this->httpClient->fetch($this->baseUrl . '/api/' . $this->apiKey . '/mirrors.xml');
         $mirrors = $this->getXml($data);
 
         foreach ($mirrors->Mirror as $mirror) {
