@@ -98,6 +98,15 @@ class Client
     }
 
     /**
+     * Get the default query language.
+     *
+     * @return string
+     */
+    public function getDefaultLanguage() {
+        return $this->defaultLanguage;
+    }
+
+    /**
      * Get the server time for further updates
      *
      * @return string
