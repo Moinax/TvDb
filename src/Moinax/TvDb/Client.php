@@ -53,6 +53,13 @@ class Client
     protected $languages = array();
 
     /**
+     * Default language.
+     *
+     * @var string
+     */
+    protected $defaultLanguage = 'en';
+
+    /**
      * @param string $baseUrl Domain name of the api without trailing slash
      * @param string $apiKey Api key provided by http://thetvdb.com
      */
@@ -82,6 +89,24 @@ class Client
     }
 
     /**
+     * Set the default query language. It must be a valid language code.
+     *
+     * @param string $language
+     */
+    public function setDefaultLanguage($language) {
+        $this->defaultLanguage = $language;
+    }
+
+    /**
+     * Get the default query language.
+     *
+     * @return string
+     */
+    public function getDefaultLanguage() {
+        return $this->defaultLanguage;
+    }
+
+    /**
      * Get the server time for further updates
      *
      * @return string
@@ -99,8 +124,10 @@ class Client
      * @internal param string $seriesName the show name to search for
      * @return array
      */
-    public function getSeries($seriesName, $language = self::DEFAULT_LANGUAGE)
+    public function getSeries($seriesName, $language = null)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName) . '&language=' . $language);
         $series = array();
         foreach ($data->Series as $serie) {
@@ -117,8 +144,10 @@ class Client
      *
      * @return Serie A serie object or false if not found
      **/
-    public function getSerie($serieId, $language = self::DEFAULT_LANGUAGE)
+    public function getSerie($serieId, $language = null)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         $data = $this->fetchXml('series/' . $serieId . '/' . $language . '.xml');
 
         return new Serie($data->Series);
@@ -135,8 +164,10 @@ class Client
      *
      * @return Serie
      */
-    public function getSerieByRemoteId(array $remoteId, $language = self::DEFAULT_LANGUAGE)
+    public function getSerieByRemoteId(array $remoteId, $language = null)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         $data = $this->fetchXml('GetSeriesByRemoteID.php?' . http_build_query($remoteId) . '&language=' . $language);
 
         return new Serie($data->Series);
@@ -185,8 +216,10 @@ class Client
      * @return array
      * @throws \ErrorException
      */
-    public function getSerieEpisodes($serieId, $language = self::DEFAULT_LANGUAGE, $format = self::FORMAT_XML)
+    public function getSerieEpisodes($serieId, $language = null, $format = self::FORMAT_XML)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         switch ($format) {
             case self::FORMAT_XML:
                 $data = $this->fetchXml('series/' . $serieId . '/all/' . $language . '.' . $format);
@@ -214,8 +247,10 @@ class Client
      *
      * @return Episode
      **/
-    public function getEpisode($serieId, $season, $episode, $language = self::DEFAULT_LANGUAGE)
+    public function getEpisode($serieId, $season, $episode, $language = null)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         $data = $this->fetchXml('series/' . $serieId . '/default/' . $season . '/' . $episode . '/' . $language . '.xml');
 
         return new Episode($data->Episode);
@@ -228,8 +263,10 @@ class Client
      * @var string $language
      * @return Episode
      **/
-    public function getEpisodeById($episodeId, $language = self::DEFAULT_LANGUAGE)
+    public function getEpisodeById($episodeId, $language = null)
     {
+        $language = $language ? : $this->defaultLanguage;
+
         $data = $this->fetchXml('episodes/' . $episodeId . '/' . $language . '.xml');
 
         return new Episode($data->Episode);
