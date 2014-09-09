@@ -166,7 +166,7 @@ class Serie
         $this->poster = (string)$data->poster;
         $this->zap2ItId = (string)$data->zap2it_id;
         if(isset($data->AliasNames)) {
-                $this->aliasNames = (array)Client::removeEmptyIndexes(explode('|', (string)$data->AliasNames));
+            $this->aliasNames = (array)Client::removeEmptyIndexes(explode('|', (string)$data->AliasNames));
         }
     }
 }
