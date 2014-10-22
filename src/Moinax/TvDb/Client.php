@@ -315,6 +315,19 @@ class Client
 
 
     /**
+     * Fetch banner raw jpeg data from banner mirror.
+     *
+     * @param string $banner the banner to fetch like graphical/79349-g7.jpg
+     * @return string raw jpeg data
+     */
+    public function fetchBanner($banner)
+    {
+        $url = $this->getMirror(self::MIRROR_TYPE_BANNER) . '/banners/' . $banner;
+        return $this->httpClient->fetch($url, array(), self::GET);
+    }
+
+
+    /**
      * Fetches data via curl and returns result
      *
      * @access protected
