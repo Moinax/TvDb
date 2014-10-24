@@ -48,6 +48,26 @@ class CacheClient implements HttpClient
     }
 
     /**
+     * Get the cache time to live.
+     *
+     * @return number
+     */
+    public function getTtl()
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * Set the cache time to live.
+     *
+     * @param integer $ttl
+     */
+    public function setTtl($ttl)
+    {
+        $this->ttl = $ttl;
+    }
+
+    /**
      * Do a GET request.
      *
      * @param resource $ch
