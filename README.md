@@ -10,6 +10,48 @@ What does it do:
 
 The Client implements almost all api functions from thetvdb excepted the download in ZIP format
 
+Usage:
+------
+
+```php
+use Moinax\TvDb\Client;
+$apiKey = 'YOURAPIKEY';
+
+$tvdb = new Client("http://thetvdb.com", $apiKey);
+$tvdb->getSerie(75710);
+```
+
+Cache usage:
+------------
+
+To save bandwidth, reduce latency, or both of two, you can use a Http Client with caching features.
+The HTTP client use the If-Modified-Since header to fetch full content only if resource was modified. This saves bandwidth.
+The HTTP client also use a time to live parameter to completly avoid making request if resource was fresh enough. This reduce latency.
+
+```php
+<?php
+use Moinax\TvDb\Http\Cache\FilesystemCache;
+use Moinax\TvDb\Http\CacheClient;
+use Moinax\TvDb\Client;
+
+$ttl = 600;
+$apiKey = 'YOURAPIKEY';
+
+$cache = new FilesystemCache(__DIR__ . '/cache');
+$httpClient = new CacheClient($cache, $ttl);
+
+$tvdb = new Client("http://thetvdb.com", $apiKey);
+$tvdb->setHttpClient($httpClient);
+
+$tvdb->getSerie(75710); //This request will fetch the resource online.
+$tvdb->getSerie(75710); //Cache content is fresh enough. We don't make any request.
+sleep(600);
+$tvdb->getSerie(75710); //The content is not fresh enough. We make a request with
+                        //the If-Modified-Since header. The server respond 304 Not
+                        //modified, so we load content from the cache.
+```
+
+
 Examples:
 ---------
 
