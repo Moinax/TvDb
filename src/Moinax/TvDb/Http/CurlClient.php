@@ -2,25 +2,22 @@
 namespace Moinax\TvDb\Http;
 
 use Moinax\TvDb\CurlException;
+
 class CurlClient implements HttpClient
 {
-
-    const POST = 'post';
-
-    const GET = 'get';
 
     /**
      * Fetch the given url contents using cURL library
      *
      * @see \Moinax\TvDb\Http\HttpClient::fetch()
      */
-    public function fetch($url, array $params = array(), $method = self::GET)
+    public function fetch($url, array $params = array(), $method = HttpClient::GET)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        if ($method == self::POST) {
+        if ($method == HttpClient::POST) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         }
