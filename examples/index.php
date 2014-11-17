@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/settings.php';
+include __DIR__ . '/../src/Moinax/TvDb/Http/HttpClient.php';
+include __DIR__ . '/../src/Moinax/TvDb/Http/CurlClient.php';
 include __DIR__ . '/../src/Moinax/TvDb/CurlException.php';
 include __DIR__ . '/../src/Moinax/TvDb/Client.php';
 include __DIR__ . '/../src/Moinax/TvDb/Serie.php';
