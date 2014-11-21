@@ -15,6 +15,7 @@ $tvdb = new Client(TVDB_URL, TVDB_API_KEY);
 $serverTime = $tvdb->getServerTime();
 // Search for a show
 $data = $tvdb->getSeries('Walking Dead');
+
 // Use the first show found and get the S01E01 episode
 $episode = $tvdb->getEpisode($data[0]->id, 1, 1, 'en');
 var_dump($episode);
@@ -25,6 +26,8 @@ var_dump($data);
 */
 
 /*
-$shows = $tvdb->search('Walking Dead');
-$episodes = $tvdb->getEpisodes($shows->Series->id, 'fr');
-echo count($episodes);*/
+// Get full series and episode info
+$episodes = $tvdb->getSerieEpisodes(153021, 'fr', Client::FORMAT_ZIP);
+var_dump($episodes["episodes"]);
+printf ("(%d Episodes)\n", count($episodes["episodes"]));
+*/
