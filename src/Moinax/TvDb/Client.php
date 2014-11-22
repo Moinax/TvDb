@@ -245,6 +245,11 @@ class Client
                 $data = $this->fetchXml('series/' . $serieId . '/all/' . $language . '.' . $format);
                 break;
             case self::FORMAT_ZIP:
+                if (!in_array('zip', stream_get_wrappers())) {
+                    throw new \ErrorException('Your PHP does nort support ZIP stream wrappers');
+                }
+                $data = $this->fetchZIP('series/' . $serieId . '/all/' . $language . '.' . $format, array(), self::GET, $language.".xml");
+                break;
             default:
                 throw new \ErrorException('Unsupported format');
                 break;
@@ -352,6 +357,39 @@ class Client
     }
 
     /**
+     * Fetches data via curl and returns result
+     *
+     * @access protected
+     * @param string $function The function used to fetch data in zip
+     * @param array $params
+     * @param string $method
+     * @param string $file The file to extract from the ZIP
+     * @return string The data
+     */
+    protected function fetchZIP($function, $params = array(), $method = self::GET, $file=null)
+    {
+        if (strpos($function, '.php') > 0) { // no need of api key for php calls
+            $url = $this->getMirror(self::MIRROR_TYPE_ZIP) . '/api/' . $function;
+        } else {
+            $url = $this->getMirror(self::MIRROR_TYPE_ZIP) . '/api/' . $this->apiKey . '/' . $function;
+        }
+
+        $zipName = tempnam(sys_get_temp_dir(), "tvdb-");
+        $zip = fopen($zipName, "w");
+        fwrite($zip, $this->httpClient->fetch($url, $params, $method));
+        fclose($zip);
+        if (is_null($file)) {
+            $file = $this->getDefaultLanguage().".xml";
+        }
+        $dataPath = "zip://".$zipName."#".$file;
+        $data = file_get_contents($dataPath);
+
+        $simpleXml = $this->getXml($data);
+
+        return $simpleXml;
+    }
+
+    /**
      * Fetch data with curl
      *
      * @param string $url
@@ -391,7 +429,7 @@ class Client
                     throw new XmlException(implode("\n", $errors));
                 }
             }
-            throw new XmlException('Xml file cound not be loaded');
+            throw new XmlException('Xml file could not be loaded');
         }
 
         return $simpleXml;
