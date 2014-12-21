@@ -2,7 +2,6 @@
 
 namespace Moinax\TvDb;
 
-use Moinax\TvDb\CurlException;
 use Moinax\TvDb\Http\CurlClient;
 use Moinax\TvDb\Http\HttpClient;
 
@@ -71,12 +70,13 @@ class Client
     /**
      * @param string $baseUrl Domain name of the api without trailing slash
      * @param string $apiKey Api key provided by http://thetvdb.com
+     * @param HttpClient $httpClient
      */
-    public function __construct($baseUrl, $apiKey)
+    public function __construct($baseUrl, $apiKey, $httpClient = null)
     {
         $this->baseUrl = $baseUrl;
         $this->apiKey = $apiKey;
-        $this->httpClient = new CurlClient();
+        $this->httpClient = $httpClient == null ? new CurlClient() : $httpClient;
     }
 
     /**
@@ -339,7 +339,7 @@ class Client
      * @param string $function The function used to fetch data in xml
      * @param array $params
      * @param string $method
-     * @return string The data
+     * @return \SimpleXMLElement The data
      */
     protected function fetchXml($function, $params = array(), $method = self::GET)
     {
