@@ -34,7 +34,7 @@ use Moinax\TvDb\Http\Cache\FilesystemCache;
 use Moinax\TvDb\Http\CacheClient;
 use Moinax\TvDb\Client;
 
-$ttl = 600;
+$ttl = 600; # how long things should get cached, in seconds.
 $apiKey = 'YOURAPIKEY';
 
 $cache = new FilesystemCache(__DIR__ . '/cache');
