@@ -1,6 +1,8 @@
 TvDb
 ====
 
+[![Join the chat at https://gitter.im/Moinax/TvDb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Moinax/TvDb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Based on the well known php library phptvdb (available on http://code.google.com/p/phptvdb/), this version
 has been completely refactored to offer more features from the tvdb api (available on http://www.thetvdb.com/wiki/index.php/Programmers_API)
 by using PHP 5.3 namespaces, very useful to import in a bigger project like Symfony 2 for example.
