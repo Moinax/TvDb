@@ -8,7 +8,7 @@ namespace Moinax\TvDb;
  * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  */
-class Banner
+class Banner implements \JsonSerializable
 {
 
     /**
@@ -92,5 +92,23 @@ class Banner
         $this->thumbnailPath = (string)$data->ThumbnailPath;
         $this->vignettePath = (string)$data->VignettePath;
         $this->season = (int)$data->Season;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'id' => $this->id,
+          'path' => $this->path,
+          'type' => $this->type,
+          'type2' => $this->type2,
+          'colors' => $this->colors,
+          'language' => $this->language,
+          'rating' => $this->rating,
+          'ratingCount' => $this->ratingCount,
+          'seriesName' => $this->seriesName,
+          'thumbnailPath' => $this->thumbnailPath,
+          'vignettePath' => $this->vignettePath,
+          'season' => $this->season,
+        ];
     }
 }

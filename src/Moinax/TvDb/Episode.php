@@ -8,7 +8,7 @@ namespace Moinax\TvDb;
  * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  **/
-class Episode
+class Episode implements \JsonSerializable
 {
 
     /**
@@ -122,5 +122,36 @@ class Episode
         $this->thumbnail = (string)$data->filename;
         $this->seasonId = (int)$data->seasonid;
         $this->serieId = (int)$data->seriesid;
+    }
+
+    public function jsonSerialize()
+    {
+        $dateFormat = Client::$JSON_DATE_FORMAT;
+        $hourFormat = Client::$JSON_TIME_FORMAT;
+
+        $array = [
+          'id' => $this->id,
+          'number' => $this->number,
+          'season' => $this->season,
+          'directors' => $this->directors,
+          'name' => $this->name,
+          'firstAired' => $this->firstAired,
+          'guestStars' => $this->guestStars,
+          'imdbId' => $this->imdbId,
+          'language' => $this->language,
+          'overview' => $this->overview,
+          'rating' => $this->rating,
+          'ratingCount' => $this->ratingCount,
+          'lastUpdated' => $this->lastUpdated->format($dateFormat . ' ' . $hourFormat),
+          'writers' => $this->writers,
+          'thumbnail' => $this->thumbnail,
+          'seasonId' => $this->seasonId,
+          'serieId' => $this->serieId,
+        ];
+
+        if($array['firstAired'])
+            $array['firstAired'] = $array['firstAired']->format($dateFormat);
+
+        return $array;
     }
 }

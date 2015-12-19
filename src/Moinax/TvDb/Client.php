@@ -69,6 +69,19 @@ class Client
     protected $httpClient;
 
     /**
+     * Date format used for casting objects to JSON
+     *
+     * @var string
+     */
+    public static $JSON_DATE_FORMAT = 'Y-m-d';
+
+    /**
+     * Time format used for casting objects to JSON
+     * @var string
+     */
+    public static $JSON_TIME_FORMAT = 'H:i:s';
+
+    /**
      * @param string $baseUrl Domain name of the api without trailing slash
      * @param string $apiKey Api key provided by http://thetvdb.com
      */
@@ -318,7 +331,6 @@ class Client
         return array('series' => $series, 'episodes' => $episodes);
     }
 
-
     /**
      * Fetch banner raw jpeg data from banner mirror.
      *
@@ -331,7 +343,27 @@ class Client
         return $this->httpClient->fetch($url, array(), self::GET);
     }
 
+    /**
+     * Set the default date format used for casting objects to JSON
+     *
+     * @param string $defaultDateFormat
+     */
+    public static function setJsonDateFormat($defaultDateFormat)
+    {
+        static::$JSON_DATE_FORMAT = $defaultDateFormat;
+    }
 
+    /**
+     * Set the default time format used for casting objects to JSON
+     *
+     * @param string $defaultTimeFormat
+     */
+    public static function setJsonTimeFormat($defaultTimeFormat)
+    {
+        static::$JSON_TIME_FORMAT = $defaultTimeFormat;
+    }
+
+    
     /**
      * Fetches data via curl and returns result
      *

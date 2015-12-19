@@ -9,7 +9,7 @@ namespace Moinax\TvDb;
  * @author Lucas Personnaz <lucas.personnaz@gmail.com>
  **/
 
-class Actor 
+class Actor implements \JsonSerializable
 {
 
 	/**
@@ -53,4 +53,14 @@ class Actor
 		$this->sortOrder = (int)$data->SortOrder;
 	}
 
+	public function jsonSerialize()
+	{
+		return [
+			'id'        => $this->id,
+			'image'     => $this->image,
+			'name'      => $this->name,
+			'role'      => $this->role,
+			'sortOrder' => $this->sortOrder,
+		];
+	}
 }

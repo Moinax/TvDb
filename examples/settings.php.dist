@@ -5,3 +5,5 @@
  */
 define('TVDB_URL', 'http://thetvdb.com');
 define('TVDB_API_KEY', '');
+define('TVDB_JSON_DATE_FORMAT', 'd-m-Y');
+define('TVDB_JSON_TIME_FORMAT', 'H:i:s');

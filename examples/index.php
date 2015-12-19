@@ -20,6 +20,11 @@ $data = $tvdb->getSeries('Walking Dead');
 $episode = $tvdb->getEpisode($data[0]->id, 1, 1, 'en');
 var_dump($episode);
 
+// format the episode as JSON
+$tvdb->setJsonDateFormat(TVDB_JSON_DATE_FORMAT);
+$tvdb->setJsonTimeFormat(TVDB_JSON_TIME_FORMAT);
+var_dump(json_encode($episode));
+
 /*$date = new \DateTime('-1 day');
 $data = $tvdb->getUpdates($date->getTimestamp());
 var_dump($data);
