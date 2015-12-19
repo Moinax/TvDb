@@ -42,7 +42,7 @@ class Banner
     public $language = '';
 
     /**
-     * @var string
+     * @var float
      */
     public $rating = '';
 
@@ -86,7 +86,7 @@ class Banner
         $this->type2 = (string)$data->BannerType2;
         $this->colors = (array)$data->Colors;
         $this->language = (string)$data->Language;
-        $this->rating = (string)$data->Rating;
+        $this->rating = (float)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
         $this->seriesName = (string)$data->SeriesName;
         $this->thumbnailPath = (string)$data->ThumbnailPath;
