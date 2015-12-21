@@ -67,7 +67,7 @@ class Episode
     public $overview = '';
 
     /**
-     * @var string
+     * @var float
      */
     public $rating = '';
 
@@ -115,7 +115,7 @@ class Episode
         $this->imdbId = (string)$data->IMDB_ID;
         $this->language = (string) $data->Language;
         $this->overview = (string)$data->Overview;
-        $this->rating = (string)$data->Rating;
+        $this->rating = (float)$data->Rating;
         $this->ratingCount = (int)$data->RatingCount;
         $this->lastUpdated = \DateTime::createFromFormat('U', (int)$data->lastupdated);
         $this->writers = (array)Client::removeEmptyIndexes(explode('|', (string)$data->Writer));
