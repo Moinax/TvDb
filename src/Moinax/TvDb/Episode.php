@@ -47,7 +47,7 @@ class Episode
     public $name = '';
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     public $firstAired;
 
