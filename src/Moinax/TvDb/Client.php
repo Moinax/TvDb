@@ -296,6 +296,20 @@ class Client
 
         return new Episode($data->Episode);
     }
+    
+    /**
+     * @param      $serieId
+     * @param      $airdate
+     * @param null $language
+     *
+     * @return Episode
+     */
+    public function getEpisodeByAirDate($serieId, $airdate, $language = null)
+    {
+        $language = $language ? : $this->defaultLanguage;
+        $data = $this->fetchXml('GetEpisodeByAirDate.php?apikey=' . $this->apiKey . '&seriesid=' . $serieId . '&airdate=' . $airdate . '&language=' . $language );
+        return new Episode($data->Episode);
+    }
 
     /**
      * Get updates list based on previous time you got data
