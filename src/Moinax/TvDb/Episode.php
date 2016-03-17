@@ -29,17 +29,17 @@ class Episode
     /**
      * @var array
      */
-    public $directors = array();
+    public $directors = [];
 
     /**
      * @var array
      */
-    public $guestStars = array();
+    public $guestStars = [];
 
     /**
      * @var array
      */
-    public $writers = array();
+    public $writers = [];
 
     /**
      * @var string

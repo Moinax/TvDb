@@ -45,14 +45,14 @@ class Client
      *
      * @var array
      */
-    protected $mirrors = array();
+    protected $mirrors = [];
 
     /**
      * Array of available languages
      *
      * @var array
      */
-    protected $languages = array();
+    protected $languages = [];
 
     /**
      * Default language.
@@ -149,7 +149,7 @@ class Client
         $language = $language ? : $this->defaultLanguage;
 
         $data = $this->fetchXml('GetSeries.php?seriesname=' . urlencode($seriesName) . '&language=' . $language);
-        $series = array();
+        $series = [];
         foreach ($data->Series as $serie) {
             $series[] = new Serie($serie);
         }
@@ -202,7 +202,7 @@ class Client
     public function getBanners($serieId)
     {
         $data = $this->fetchXml('series/' . $serieId . '/banners.xml');
-        $banners = array();
+        $banners = [];
         foreach ($data->Banner as $banner) {
             $banners[] = new Banner($banner);
         }
@@ -219,7 +219,7 @@ class Client
     public function getActors($serieId)
     {
         $data = $this->fetchXml('series/'. $serieId . '/actors.xml');
-        $actors = array();
+        $actors = [];
         foreach ($data->Actor as $actor) {
             $actors [] = new Actor($actor);
         }
@@ -248,18 +248,18 @@ class Client
                 if (!in_array('zip', stream_get_wrappers())) {
                     throw new \ErrorException('Your PHP does nort support ZIP stream wrappers');
                 }
-                $data = $this->fetchZIP('series/' . $serieId . '/all/' . $language . '.' . $format, array(), self::GET, $language.".xml");
+                $data = $this->fetchZIP('series/' . $serieId . '/all/' . $language . '.' . $format, [], self::GET, $language.".xml");
                 break;
             default:
                 throw new \ErrorException('Unsupported format');
                 break;
         }
         $serie = new Serie($data->Series);
-        $episodes = array();
+        $episodes = [];
         foreach ($data->Episode as $episode) {
             $episodes[(int)$episode->id] = new Episode($episode);
         }
-        return array('serie' => $serie, 'episodes' => $episodes);
+        return ['serie' => $serie, 'episodes' => $episodes];
     }
 
     /**
@@ -321,15 +321,15 @@ class Client
     {
         $data = $this->fetchXml('Updates.php?type=all&time=' . $previousTime);
 
-        $series = array();
+        $series = [];
         foreach ($data->Series as $serieId) {
             $series[] = (int)$serieId;
         }
-        $episodes = array();
+        $episodes = [];
         foreach ($data->Episode as $episodeId) {
             $episodes[] = (int)$episodeId;
         }
-        return array('series' => $series, 'episodes' => $episodes);
+        return ['series' => $series, 'episodes' => $episodes];
     }
 
 
@@ -342,7 +342,7 @@ class Client
     public function fetchBanner($banner)
     {
         $url = $this->getMirror(self::MIRROR_TYPE_BANNER) . '/banners/' . $banner;
-        return $this->httpClient->fetch($url, array(), self::GET);
+        return $this->httpClient->fetch($url, [], self::GET);
     }
 
 
@@ -355,7 +355,7 @@ class Client
      * @param string $method
      * @return string The data
      */
-    protected function fetchXml($function, $params = array(), $method = self::GET)
+    protected function fetchXml($function, $params = [], $method = self::GET)
     {
         if (strpos($function, '.php') > 0) { // no need of api key for php calls
             $url = $this->getMirror(self::MIRROR_TYPE_XML) . '/api/' . $function;
@@ -380,7 +380,7 @@ class Client
      * @param string $file The file to extract from the ZIP
      * @return string The data
      */
-    protected function fetchZIP($function, $params = array(), $method = self::GET, $file=null)
+    protected function fetchZIP($function, $params = [], $method = self::GET, $file=null)
     {
         if (strpos($function, '.php') > 0) { // no need of api key for php calls
             $url = $this->getMirror(self::MIRROR_TYPE_ZIP) . '/api/' . $function;
@@ -412,7 +412,7 @@ class Client
      * @throws CurlException
      * @return bool|string
      */
-    protected function fetch($url, array $params = array(), $method = self::GET)
+    protected function fetch($url, array $params = [], $method = self::GET)
     {
         return $this->httpClient->fetch($url, $params, $method);
     }
@@ -434,7 +434,7 @@ class Client
         if (!$simpleXml) {
             if (extension_loaded('libxml')) {
                 $xmlErrors = libxml_get_errors();
-                $errors = array();
+                $errors = [];
                 foreach ($xmlErrors as $error) {
                     $errors[] = sprintf('Error in file %s on line %d with message : %s', $error->file, $error->line, $error->message);
                 }
@@ -499,11 +499,11 @@ class Client
         $languages = $this->fetchXml('languages.xml');
 
         foreach ($languages->Language as $language) {
-            $this->languages[(string)$language->abbreviation] = array(
+            $this->languages[(string)$language->abbreviation] = [
                 'name' => (string)$language->name,
                 'abbreviation' => (string)$language->abbreviation,
                 'id' => (int)$language->id,
-            );
+            ];
         }
     }
 

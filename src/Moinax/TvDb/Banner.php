@@ -34,7 +34,7 @@ class Banner
     /**
      * @var array
      */
-    public $colors = array();
+    public $colors = [];
 
     /**
      * @var string
