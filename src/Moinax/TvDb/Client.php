@@ -210,6 +210,21 @@ class Client
     }
 
     /**
+     * Find banners that match a filter string
+     * Eg: poster or season 
+    */
+    public function getBannersFiltered($serieId,$filter) {
+        $data = $this->getBanners($serieId);
+        $banners = array();
+        foreach($data as $image) {
+            if($image->type == $filter) {
+                $banners[] = $image;
+            }
+        }
+        return $banners;
+    }
+
+    /**
      * Find all actors related to a serie
      *
      * @param int $serieId
