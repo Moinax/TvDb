@@ -38,7 +38,7 @@ class CacheClient implements HttpClient
      *
      * @see \Moinax\TvDb\Http\HttpClient::fetch()
      */
-    public function fetch($url, array $params = array(), $method = HttpClient::GET)
+    public function fetch($url, array $params = [], $method = HttpClient::GET)
     {
         $ch = $this->curlInit($url, $params, $method);
         if($method == HttpClient::POST) {
@@ -186,7 +186,7 @@ class CacheClient implements HttpClient
         $extension = pathinfo($url['path'], PATHINFO_EXTENSION);
 
         $resource = $url['path'];
-        if(in_array($extension, array('xml', 'zip'))) {
+        if(in_array($extension, ['xml', 'zip'])) {
             //Remove the api key from the resource name.
             $path = explode('/', $url['path']);
             unset($path[2]);

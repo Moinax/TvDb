@@ -11,7 +11,7 @@ class CurlClient implements HttpClient
      *
      * @see \Moinax\TvDb\Http\HttpClient::fetch()
      */
-    public function fetch($url, array $params = array(), $method = HttpClient::GET)
+    public function fetch($url, array $params = [], $method = HttpClient::GET)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 1);

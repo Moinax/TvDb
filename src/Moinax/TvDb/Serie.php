@@ -48,7 +48,7 @@ class Serie
     /**
      * @var array
      */
-    public $actors = array();
+    public $actors = [];
 
     /**
      * @var string
@@ -68,7 +68,7 @@ class Serie
     /**
      * @var array
      */
-    public $genres = array();
+    public $genres = [];
 
     /**
      * @var string
@@ -128,7 +128,7 @@ class Serie
     /**
      * @var array
      */
-    public $aliasNames = array();
+    public $aliasNames = [];
 
     /**
      * Constructor

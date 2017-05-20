@@ -8,5 +8,5 @@ interface HttpClient
 
     const GET = 'get';
 
-    public function fetch($url, array $params = array(), $method = self::GET);
+    public function fetch($url, array $params = [], $method = self::GET);
 }
