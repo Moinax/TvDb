@@ -8,7 +8,7 @@ namespace Moinax\TvDb;
  * @package TvDb
  * @author Jérôme Poskin <moinax@gmail.com>
  */
-class Serie
+class Serie implements \JsonSerializable
 {
     /**
      * @var int
@@ -168,5 +168,38 @@ class Serie
         if(isset($data->AliasNames)) {
             $this->aliasNames = (array)Client::removeEmptyIndexes(explode('|', (string)$data->AliasNames));
         }
+    }
+
+    public function jsonSerialize()
+    {
+        $dateFormat = Client::$JSON_DATE_FORMAT;
+        $hourFormat = Client::$JSON_TIME_FORMAT;
+
+        return [
+          'id' => $this->id,
+          'language' => $this->language,
+          'name' => $this->name,
+          'banner' => $this->banner,
+          'overview' => $this->overview,
+          'firstAired' => $this->firstAired->format($dateFormat),
+          'imdbId' => $this->imdbId,
+          'actors' => $this->actors,
+          'airsDayOfWeek' => $this->airsDayOfWeek,
+          'airsTime' => $this->airsTime,
+          'contentRating' => $this->contentRating,
+          'genres' => $this->genres,
+          'network' => $this->network,
+          'rating' => $this->rating,
+          'ratingCount' => $this->ratingCount,
+          'runtime' => $this->runtime,
+          'status' => $this->status,
+          'added' => $this->added->format($dateFormat . ' '. $hourFormat),
+          'addedBy' => $this->addedBy,
+          'fanArt' => $this->fanArt,
+          'lastUpdated' => $this->lastUpdated->format($dateFormat . ' '. $hourFormat),
+          'poster' => $this->poster,
+          'zap2ItId' => $this->zap2ItId,
+          'aliasNames' => $this->aliasNames,
+        ];
     }
 }
