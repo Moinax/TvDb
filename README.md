@@ -19,7 +19,7 @@ Usage:
 use Moinax\TvDb\Client;
 $apiKey = 'YOURAPIKEY';
 
-$tvdb = new Client("http://thetvdb.com", $apiKey);
+$tvdb = new Client("https://thetvdb.com", $apiKey);
 $tvdb->getSerie(75710);
 ```
 
@@ -42,7 +42,7 @@ $apiKey = 'YOURAPIKEY';
 $cache = new FilesystemCache(__DIR__ . '/cache');
 $httpClient = new CacheClient($cache, $ttl);
 
-$tvdb = new Client("http://thetvdb.com", $apiKey);
+$tvdb = new Client("https://thetvdb.com", $apiKey);
 $tvdb->setHttpClient($httpClient);
 
 $tvdb->getSerie(75710); //This request will fetch the resource online.

@@ -500,7 +500,7 @@ class Client
         if (empty($this->mirrors)) {
             $this->getMirrors();
         }
-        return $this->mirrors[$typeMask][array_rand($this->mirrors[$typeMask], 1)];
+        return $this->baseUrl;
 
     }
 
