@@ -445,7 +445,7 @@ class Client
         }
 
         $simpleXml = simplexml_load_string($data);
-        if (!$simpleXml) {
+        if ($simpleXml === FALSE) {
             if (extension_loaded('libxml')) {
                 $xmlErrors = libxml_get_errors();
                 $errors = array();
