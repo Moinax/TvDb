@@ -445,7 +445,7 @@ class Client
         }
 
         $simpleXml = simplexml_load_string($data);
-        if (!$simpleXml) {
+        if ($simpleXml === FALSE) {
             if (extension_loaded('libxml')) {
                 $xmlErrors = libxml_get_errors();
                 $errors = array();
@@ -500,7 +500,7 @@ class Client
         if (empty($this->mirrors)) {
             $this->getMirrors();
         }
-        return $this->mirrors[$typeMask][array_rand($this->mirrors[$typeMask], 1)];
+        return $this->baseUrl;
 
     }
 
