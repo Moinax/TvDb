@@ -1,6 +1,10 @@
 TvDb
 ====
 
+**Deprecated** This library was implemented to work with the TVDB API V1. 
+
+It is now deprecated so I suggest you to find another library that implements the new API like https://github.com/adrenth/thetvdb2
+
 [![Join the chat at https://gitter.im/Moinax/TvDb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Moinax/TvDb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Based on the well known php library phptvdb (available on http://code.google.com/p/phptvdb/), this version
