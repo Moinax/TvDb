@@ -475,15 +475,16 @@ class Client
         foreach ($mirrors->Mirror as $mirror) {
             $typeMask = (int)$mirror->typemask;
             $mirrorPath = (string)$mirror->mirrorpath;
+            $secure_mirrorPath = preg_replace("/http\:\/\//i", "https://", $mirrorPath);
 
             if ($typeMask & self::MIRROR_TYPE_XML) {
-                $this->mirrors[self::MIRROR_TYPE_XML][] = $mirrorPath;
+                $this->mirrors[self::MIRROR_TYPE_XML][] = $secure_mirrorPath;
             }
             if ($typeMask & self::MIRROR_TYPE_BANNER) {
-                $this->mirrors[self::MIRROR_TYPE_BANNER][] = $mirrorPath;
+                $this->mirrors[self::MIRROR_TYPE_BANNER][] = $secure_mirrorPath;
             }
             if ($typeMask & self::MIRROR_TYPE_ZIP) {
-                $this->mirrors[self::MIRROR_TYPE_ZIP][] = $mirrorPath;
+                $this->mirrors[self::MIRROR_TYPE_ZIP][] = $secure_mirrorPath;
             }
         }
     }
